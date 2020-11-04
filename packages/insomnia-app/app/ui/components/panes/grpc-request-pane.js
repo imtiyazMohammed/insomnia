@@ -16,6 +16,7 @@ import {
 import type { GrpcMethodDefinition, GrpcMethodType } from '../../../network/grpc/method';
 import { GrpcRequestEventEnum } from '../../../common/grpc-events';
 import type { GrpcRequestEvent } from '../../../common/grpc-events';
+import GrpcSendButton from '../buttons/grpc-send-button';
 
 type Props = {
   forceRefreshKey: string,
@@ -100,15 +101,7 @@ const GrpcRequestPane = ({ activeRequest, forceRefreshKey }: Props) => {
           placeholder="test placeholder"
         />
 
-        {!selectedMethod && <Button disabled>Send</Button>}
-        {selectedMethodType === GrpcMethodTypeEnum.unary && (
-          <Button onClick={() => sendIpc(GrpcRequestEventEnum.sendUnary)}>Send</Button>
-        )}
-        {selectedMethodType === GrpcMethodTypeEnum.client && (
-          <Button onClick={() => sendIpc(GrpcRequestEventEnum.startStream)}>Start</Button>
-        )}
-        {(selectedMethodType === GrpcMethodTypeEnum.server ||
-          selectedMethodType === GrpcMethodTypeEnum.bidi) && <Button disabled>Coming soon</Button>}
+        <GrpcSendButton requestId={activeRequest._id} methodType={selectedMethodType} />
       </PaneHeader>
 
       <PaneBody>
@@ -147,7 +140,6 @@ const GrpcRequestPane = ({ activeRequest, forceRefreshKey }: Props) => {
               <br />
               <Button onClick={() => sendIpc(GrpcRequestEventEnum.sendMessage)}>Stream</Button>
               <Button onClick={() => sendIpc(GrpcRequestEventEnum.commit)}>Commit</Button>
-              <Button onClick={() => sendIpc(GrpcRequestEventEnum.cancel)}>Cancel</Button>
             </>
           )}
         </div>
