@@ -139,7 +139,8 @@ const GrpcRequestPane = ({ activeRequest, forceRefreshKey }: Props) => {
             onChange={handleChange.body}
             defaultValue={activeRequest.body.text}
           />
-          {selectedMethodType === GrpcMethodTypeEnum.client && (
+          {(selectedMethodType === GrpcMethodTypeEnum.client ||
+            selectedMethodType === GrpcMethodTypeEnum.bidi) && (
             <>
               <br />
               <Button
