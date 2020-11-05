@@ -17,6 +17,8 @@ import type { GrpcMethodDefinition, GrpcMethodType } from '../../../network/grpc
 import { GrpcRequestEventEnum } from '../../../common/grpc-events';
 import type { GrpcRequestEvent } from '../../../common/grpc-events';
 import GrpcSendButton from '../buttons/grpc-send-button';
+import { useGrpcDispatch } from '../../context/grpc/grpc-context';
+import grpcActions from '../../context/grpc/grpc-actions';
 
 type Props = {
   forceRefreshKey: string,
@@ -62,6 +64,8 @@ const getChangeHandlers = (request: GrpcRequest): ChangeHandlers => {
 };
 
 const GrpcRequestPane = ({ activeRequest, forceRefreshKey }: Props) => {
+  const grpcDispatch = useGrpcDispatch();
+
   const [methods, setMethods] = React.useState<Array<GrpcMethodDefinition>>([]);
 
   // Reload the methods, on first mount, or if the request protoFile changes
@@ -138,7 +142,15 @@ const GrpcRequestPane = ({ activeRequest, forceRefreshKey }: Props) => {
           {selectedMethodType === GrpcMethodTypeEnum.client && (
             <>
               <br />
-              <Button onClick={() => sendIpc(GrpcRequestEventEnum.sendMessage)}>Stream</Button>
+              <Button
+                onClick={() => {
+                  sendIpc(GrpcRequestEventEnum.sendMessage);
+                  grpcDispatch(
+                    grpcActions.requestMessage(activeRequest._id, activeRequest.body.text),
+                  );
+                }}>
+                Stream
+              </Button>
               <Button onClick={() => sendIpc(GrpcRequestEventEnum.commit)}>Commit</Button>
             </>
           )}
