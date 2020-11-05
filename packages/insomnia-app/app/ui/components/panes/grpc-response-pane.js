@@ -13,11 +13,21 @@ type Props = {
 
 const GrpcResponsePane = ({ activeRequest }: Props) => {
   const grpcState = useGrpcState();
-  const { requestMessages, responseMessages } = findGrpcRequestState(grpcState, activeRequest._id);
+  const { running, requestMessages, responseMessages, status } = findGrpcRequestState(
+    grpcState,
+    activeRequest._id,
+  );
 
   return (
     <Pane type="response">
-      <PaneHeader />
+      <PaneHeader>
+        {running && <i className="fa fa-spinner fa-spin" />}
+        {status && (
+          <>
+            Status: {status.code} {status.details}
+          </>
+        )}
+      </PaneHeader>
       <PaneBody>
         <strong className="pad-bottom text-danger">Request Messages</strong>
         <ListGroup className="pad-bottom">
